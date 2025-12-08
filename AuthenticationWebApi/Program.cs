@@ -13,5 +13,5 @@ var app = builder.Build();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapHealthChecks("/health");
 app.Run();
