@@ -1,56 +1,48 @@
 {
   "Routes": [
-    // Authentication Web API
     {
       "UpstreamPathTemplate": "/api/Account",
       "UpstreamHttpMethod": [ "Post" ],
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "authenticationwebapi",
-          "Port": 80
-        }
-      ],
-      "DownstreamPathTemplate": "/api/Account"
+      "ServiceName": "authentication-service",
+      "DownstreamPathTemplate": "/api/Account",
+      "UseServiceDiscovery": true,
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      }
     },
-    // Customer Web API
     {
       "UpstreamPathTemplate": "/api/Customer",
       "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "customerwebapi",
-          "Port": 80
-        }
-      ],
-      "DownstreamPathTemplate": "/api/Customer"
+      "ServiceName": "customer-service",
+      "DownstreamPathTemplate": "/api/Customer",
+      "UseServiceDiscovery": true,
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      }
     },
     {
       "UpstreamPathTemplate": "/api/Customer/{customerId}",
       "UpstreamHttpMethod": [ "Get", "Delete" ],
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "customerwebapi",
-          "Port": 80
-        }
-      ],
-      "DownstreamPathTemplate": "/api/Customer/{customerId}"
+      "ServiceName": "customer-service",
+      "DownstreamPathTemplate": "/api/Customer/{customerId}",
+      "UseServiceDiscovery": true,
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      }
     },
-
-    //Product Web API
     {
       "UpstreamPathTemplate": "/api/Product",
       "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "productwebapi",
-          "Port": 80
-        }
-      ],
+      "ServiceName": "product-service",
       "DownstreamPathTemplate": "/api/Product",
+      "UseServiceDiscovery": true,
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      },
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -63,27 +55,23 @@
       "UpstreamPathTemplate": "/api/Product/{productId}",
       "UpstreamHttpMethod": [ "Get", "Delete" ],
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "productwebapi",
-          "Port": 80
-        }
-      ],
-      "DownstreamPathTemplate": "/api/Product/{productId}"
+      "ServiceName": "product-service",
+      "DownstreamPathTemplate": "/api/Product/{productId}",
+      "UseServiceDiscovery": true,
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      }
     },
-
-    // Order Web API
     {
       "UpstreamPathTemplate": "/api/Order",
       "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "orderwebapi",
-          "Port": 80
-        }
-      ],
+      "ServiceName": "order-service",
       "DownstreamPathTemplate": "/api/Order",
+      "UseServiceDiscovery": true,
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      },
       "RateLimitOptions": {
         "ClientWhitelist": [],
         "EnableRateLimiting": true,
@@ -96,17 +84,21 @@
       "UpstreamPathTemplate": "/api/Order/{orderId}",
       "UpstreamHttpMethod": [ "Get", "Delete" ],
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "orderwebapi",
-          "Port": 80
-        }
-      ],
-      "DownstreamPathTemplate": "/api/Order/{orderId}"
+      "ServiceName": "order-service",
+      "DownstreamPathTemplate": "/api/Order/{orderId}",
+      "UseServiceDiscovery": true,
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      }
     }
   ],
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:8001",
+    "ServiceDiscoveryProvider": {
+      "Type": "Consul",
+      "Host": "consul",
+      "Port": 8500
+    },
     "RateLimitOptions": {
       "QuotaExceededMessage": "Request not allowed",
       "HttpStatusCode": 909

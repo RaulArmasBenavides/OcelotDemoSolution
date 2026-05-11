@@ -4,6 +4,18 @@ networks:
   backend:
 
 services:
+  consul:
+    container_name: consul-server
+    image: consul:latest
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    networks:
+      - backend
+    environment:
+      - CONSUL_BIND_INTERFACE=eth0
+    command: agent -server -ui -bootstrap-expect=1 -client=0.0.0.0
+
   customerdb:
     container_name: customer-db
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -27,6 +39,10 @@ services:
       - DB_HOST=customerdb
       - DB_NAME=dms_customer
       - DB_SA_PASSWORD=password@12345#
+      - ASPNETCORE_URLS=http://+:80
+      - SERVICE_HOST=customerwebapi
+    depends_on:
+      - consul
 
   productdb:
     container_name: product-db
@@ -50,6 +66,10 @@ services:
       - DB_HOST=productdb
       - DB_NAME=dms_product
       - DB_ROOT_PASSWORD=password@12345#
+      - ASPNETCORE_URLS=http://+:80
+      - SERVICE_HOST=productwebapi
+    depends_on:
+      - consul
   
   orderdb:
     container_name: order-db
@@ -70,6 +90,10 @@ services:
     environment:
       - DB_HOST=orderdb
       - DB_NAME=dms_order
+      - ASPNETCORE_URLS=http://+:80
+      - SERVICE_HOST=orderwebapi
+    depends_on:
+      - consul
 
   apigateway:
     container_name: api-gateway
@@ -81,6 +105,10 @@ services:
       - 8001:80
     networks:
       - backend
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - consul
 
   authenticationwebapi:
     container_name: authentication-api
@@ -90,3 +118,8 @@ services:
       dockerfile: AuthenticationWebApi/Dockerfile
     networks:
       - backend
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+      - SERVICE_HOST=authenticationwebapi
+    depends_on:
+      - consul
