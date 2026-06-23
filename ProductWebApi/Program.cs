@@ -5,8 +5,7 @@ using Consul;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddHealthChecks()
-    .AddDbContextCheck<ProductDbContext>();
+builder.Services.AddHealthChecks();
 
 var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
 var dbName = Environment.GetEnvironmentVariable("DB_NAME");

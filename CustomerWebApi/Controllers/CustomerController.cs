@@ -1,4 +1,7 @@
 ﻿using CustomerWebApi.Models;
+using CustomerWebApi.Dtos.Request;
+using CustomerWebApi.Dtos.Response;
+using CustomerWebApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +21,12 @@ namespace CustomerWebApi.Controllers
 
         [HttpGet]
         [Authorize]
-        public ActionResult<IEnumerable<Customer>> GetCustomers()
+        public async Task<ActionResult<PaginatedResponse<Customer>>> GetCustomers(
+            [FromQuery] CustomerFilterRequest request)
         {
-            return _customerDbContext.Customers;
+            var result = await _customerDbContext.Customers
+                .ToPaginatedWithFiltersAsync(request);
+            return Ok(result);
         }
 
         [HttpGet("{customerId:int}")]

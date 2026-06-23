@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using OrderWebApi.Models;
+using OrderWebApi.Dtos.Request;
+using OrderWebApi.Dtos.Response;
+using OrderWebApi.Extensions;
 
 namespace OrderWebApi.Controllers
 {
@@ -24,9 +27,11 @@ namespace OrderWebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
+        public async Task<ActionResult<PaginatedResponse<Order>>> GetOrders(
+            [FromQuery] OrderFilterRequest request)
         {
-            return await _orderCollection.Find(Builders<Order>.Filter.Empty).ToListAsync();
+            var result = await _orderCollection.ToPaginatedWithFiltersAsync(request);
+            return Ok(result);
         }
 
         [HttpGet("{orderId}")]

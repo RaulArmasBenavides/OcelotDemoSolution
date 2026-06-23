@@ -7,8 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddCustomJwtAuthentication();
-builder.Services.AddHealthChecks()
-    .AddDbContextCheck<CustomerDbContext>();
+builder.Services.AddHealthChecks();
 
 var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
 var dbName = Environment.GetEnvironmentVariable("DB_NAME");

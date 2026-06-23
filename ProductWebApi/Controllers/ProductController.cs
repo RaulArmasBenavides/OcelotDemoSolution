@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProductWebApi.Models;
+using ProductWebApi.Dtos.Request;
+using ProductWebApi.Dtos.Response;
+using ProductWebApi.Extensions;
 
 namespace ProductWebApi.Controllers
 {
@@ -16,9 +19,12 @@ namespace ProductWebApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Product>> GetProducts()
+        public async Task<ActionResult<PaginatedResponse<Product>>> GetProducts(
+            [FromQuery] ProductFilterRequest request)
         {
-            return _dbContext.Products;
+            var result = await _dbContext.Products
+                .ToPaginatedWithFiltersAsync(request);
+            return Ok(result);
         }
 
         [HttpGet("{productId:int}")]
