@@ -19,6 +19,7 @@ namespace ProductWebApi.Controllers
         }
 
         [HttpGet]
+        [ResponseCache(Duration = 300, VaryByQueryKeys = new[] { "pageNumber", "pageSize", "search", "sortBy", "sortOrder", "priceMin", "priceMax" })]
         public async Task<ActionResult<PaginatedResponse<Product>>> GetProducts(
             [FromQuery] ProductFilterRequest request)
         {
@@ -28,6 +29,7 @@ namespace ProductWebApi.Controllers
         }
 
         [HttpGet("{productId:int}")]
+        [ResponseCache(Duration = 300)]
         public async Task<ActionResult<Product>> GetById(int productId)
         {
             var product = await _dbContext.Products.FindAsync(productId);

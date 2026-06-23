@@ -1,8 +1,8 @@
 using System.Net;
 using System.Text.Json;
-using CustomerWebApi.Dtos.Response;
+using OrderWebApi.Dtos.Response;
 
-namespace CustomerWebApi.Middlewares
+namespace OrderWebApi.Middlewares
 {
     public class ExceptionMiddleware
     {

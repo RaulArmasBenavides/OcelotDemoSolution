@@ -27,6 +27,7 @@ namespace OrderWebApi.Controllers
         }
 
         [HttpGet]
+        [ResponseCache(Duration = 300, VaryByQueryKeys = new[] { "pageNumber", "pageSize", "customerId", "dateFrom", "dateTo" })]
         public async Task<ActionResult<PaginatedResponse<Order>>> GetOrders(
             [FromQuery] OrderFilterRequest request)
         {
@@ -35,6 +36,7 @@ namespace OrderWebApi.Controllers
         }
 
         [HttpGet("{orderId}")]
+        [ResponseCache(Duration = 300)]
         public async Task<ActionResult<Order>> GetById(string orderId)
         {
             var filterDefinition = Builders<Order>.Filter.Eq(x => x.OrderId, orderId);

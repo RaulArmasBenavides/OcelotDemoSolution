@@ -21,6 +21,7 @@ namespace CustomerWebApi.Controllers
 
         [HttpGet]
         [Authorize]
+        [ResponseCache(Duration = 300, VaryByQueryKeys = new[] { "pageNumber", "pageSize", "search", "sortBy", "sortOrder" })]
         public async Task<ActionResult<PaginatedResponse<Customer>>> GetCustomers(
             [FromQuery] CustomerFilterRequest request)
         {
@@ -30,6 +31,7 @@ namespace CustomerWebApi.Controllers
         }
 
         [HttpGet("{customerId:int}")]
+        [ResponseCache(Duration = 300)]
         public async Task<ActionResult<Customer>> GetById(int customerId)
         {
             var customer = await _customerDbContext.Customers.FindAsync(customerId);
